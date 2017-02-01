@@ -1,0 +1,64 @@
+#define CLS system("cls")
+#define FLUSH fflush(stdin)
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void mainMenu() {
+
+	int mSelection = 0;	//	Menu choice
+	double morseMoney[2] = { 0 , 300 };
+
+	do {	// Begin Menu Loop
+
+		CLS;
+
+		currentMoney(morseMoney);
+
+		printf("What would you like to do? \n");
+		printf("\n 1. Go to the Bank");
+		printf("\n 2. Place a bet");
+		printf("\n 3. Go to the track");
+		printf("\n 4. View Past Winners");
+		prinff("\n 5. Go Home");
+
+		printf("\n Enter Selection: ");
+		scanf("%i", &mSelection); FLUSH;
+
+		switch (mSelection) { // Begin switch
+
+		case 1:
+			
+			break;
+
+		case 2:
+			
+			break;
+
+		case 3:
+		
+			break;
+
+		case 4:
+			
+			break;
+
+		case 5:
+
+			break;
+
+		default:	//	Error Checking
+			printf("Please enter a valid option \n");
+			break;
+		} // End switch
+
+	} while (mSelection != 5);
+
+}	//	End Menu Function
+
+
+		void currentMoney(double morseMoney[])	{
+
+
+
+		}
