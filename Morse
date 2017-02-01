@@ -17,138 +17,145 @@ void main() {
 	mainMenu();
 }
 
-void bankMenu(double morseMoney[]) {
+	void bankMenu(double morseMoney[]) {
 
-	int bSelection = 0;
-	double moneyAmount = 0;
+		int bSelection = 0;
+		double moneyAmount = 0;
 
-	do {	// Begin Menu Loop
+		do {	// Begin Menu Loop
 
-		CLS;
+			CLS;
 
-		currentMoney(morseMoney);
+			currentMoney(morseMoney);
 
-		printf("What would you like to do? \n");
-		printf("\n 1. Make a withdrawal");
-		printf("\n 2. Make a Deposit");
-		printf("\n 3. Cancel");
+			printf("What would you like to do? \n");
+			printf("\n 1. Make a withdrawal");
+			printf("\n 2. Make a Deposit");
+			printf("\n 3. Balance Inquiry");
+			printf("\n 4. Cancel");
 
-		printf("\n Enter Selection: ");
-		scanf_s("%i", &bSelection); FLUSH;
+			printf("\n Enter Selection: ");
+			scanf_s("%i", &bSelection); FLUSH;
 
-		switch (bSelection) { // Begin switch
+			switch (bSelection) { // Begin switch
 
-		case 1:
+			case 1:
 
-			printf("How much would you like to withdraw?\nAmount: ");
-			scanf_s("%lf", &moneyAmount);
+				printf("How much would you like to withdraw?\nAmount: ");
+				scanf_s("%lf", &moneyAmount);
 
-			if (morseMoney[1] < moneyAmount) {
-				printf("You don't have enough money!\n");
+				if (morseMoney[1] < moneyAmount) {	//	Insufficient Funds
+					printf("You don't have enough money!\n");
+					PAUSE;
+				} 
+				else {
+					morseMoney[1] -= moneyAmount;	//	Transfer From Bank to Wallet
+					morseMoney[0] += moneyAmount;
+				}
+
+				break;
+
+			case 2:
+
+				printf("How much would you like to deposit?\nAmount: ");
+				scanf_s("%lf", &moneyAmount);
+
+				if (morseMoney[0] < moneyAmount) {	//	Insufficient Funds
+					printf("You don't have enough money!\n");
+					PAUSE;
+				}
+				else {
+					morseMoney[0] -= moneyAmount;	//	Transfer From Wallet to Bank
+					morseMoney[1] += moneyAmount;
+				}
+
+				break;
+
+			case 3:
+
+				printf("Look at the top of the screen, Dummy.");
+				break;
+
+			case 4:
+				printf("\nReturning to the main menu.\n");
+				break;
+
+			default:	//	Error Checking
+				printf("Please enter a valid option \n");
 				PAUSE;
-			}
-			else {
-				morseMoney[1] -= moneyAmount;
-				morseMoney[0] += moneyAmount;
-			}
+				break;
+			} // End switch
 
-			break;
+		} while (bSelection != 3);
 
-		case 2:
+	}
 
-			printf("How much would you like to deposit?\nAmount: ");
-			scanf_s("%lf", &moneyAmount);
+	void mainMenu() {
 
-			if (morseMoney[0] < moneyAmount) {
-				printf("You don't have enough money!\n");
-				PAUSE;
-			}
-			else {
-				morseMoney[0] -= moneyAmount;
-				morseMoney[1] += moneyAmount;
-			}
+		int mSelection = 0;	//	Menu choice
+		double morseMoney[2] = { 0 , 300 };	//	Element 0 is Wallet, Element 1 is Bank
 
-			break;
+		do {	// Begin Menu Loop
 
-		case 3:
-			printf("\nReturning to the main menu.\n");
-			break;
+			CLS;
 
-		default:	//	Error Checking
-			printf("Please enter a valid option \n");
-			PAUSE;
-			break;
-		} // End switch
+			currentMoney(morseMoney);	//	Banner Display
 
-	} while (bSelection != 3);
-}
+			printf("What would you like to do? \n");
+			printf("\n 1. Go to the Bank");
+			printf("\n 2. Place a bet");
+			printf("\n 3. Go to the track");
+			printf("\n 4. View Past Winners");
+			printf("\n 5. Go Home");
 
-void mainMenu() {
+			printf("\n Enter Selection: ");
+			scanf_s("%i", &mSelection); FLUSH;
 
-	int mSelection = 0;	//	Menu choice
-	double morseMoney[2] = { 0 , 300 };	//	Element 0 is Wallet, Element 1 is Bank
+			switch (mSelection) { // Begin switch
 
-	do {	// Begin Menu Loop
+			case 1:
 
-		CLS;
+				bankMenu(morseMoney);	//	To the Bank
 
-		currentMoney(morseMoney);
+				break;
 
-		printf("What would you like to do? \n");
-		printf("\n 1. Go to the Bank");
-		printf("\n 2. Place a bet");
-		printf("\n 3. Go to the track");
-		printf("\n 4. View Past Winners");
-		printf("\n 5. Go Home");
-
-		printf("\n Enter Selection: ");
-		scanf_s("%i", &mSelection); FLUSH;
-
-		switch (mSelection) { // Begin switch
-
-		case 1:
-
-			bankMenu(morseMoney);
-
-			break;
-
-		case 2:
+			case 2:
 			
-			break;
+				break;
 
-		case 3:
+			case 3:
 		
-			break;
+				break;
 
-		case 4:
+			case 4:
 			
-			break;
+				break;
 
-		case 5:
+			case 5:
 
-			break;
+				break;
 
-		default:	//	Error Checking
-			printf("Please enter a valid option \n");
-			break;
-		} // End switch
+			default:	//	Error Checking
+				printf("Please enter a valid option \n");
+				break;
+			} // End switch
 
-		PAUSE;
+			PAUSE;
 
-	} while (mSelection != 5);
+		} while (mSelection != 5);
 
-}	//	End Menu Function
+	}	//	End Menu Function
 
 
-		void currentMoney(double morseMoney[])	{	//	Banner across top to show current money
+	void currentMoney(double morseMoney[])	{	//	Banner across top to show current money
 
 			printf("---------------------------------------------------------------------\n\n");
 			printf("\tMoney In Wallet: %.2lf\tMoney In Bank: %.2lf", morseMoney[0], morseMoney[1]);
 			printf("\n\n---------------------------------------------------------------------\n\n");
 
-		}
+	}
 
-		int whichHorseWins() {
+	int whichHorseWins() {
 
 			int x;	//	Dice Roll for odds
 
@@ -182,5 +189,5 @@ void mainMenu() {
 			else if (x >= 79 && x <= 100) {	//	22% Horse 9
 				return 9;
 			}
-			
-		}
+
+	}
