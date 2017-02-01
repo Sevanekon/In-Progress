@@ -1,8 +1,18 @@
 #define CLS system("cls")
 #define FLUSH fflush(stdin)
+#define PAUSE system("pause")
 
 #include <stdlib.h>
 #include <stdio.h>
+
+//	Prototype Functions Here
+void currentMoney(double morseMoney[]);
+void mainMenu();
+//	End Prototype Functions
+
+void main() {
+	mainMenu();
+}
 
 void mainMenu() {
 
@@ -20,10 +30,10 @@ void mainMenu() {
 		printf("\n 2. Place a bet");
 		printf("\n 3. Go to the track");
 		printf("\n 4. View Past Winners");
-		prinff("\n 5. Go Home");
+		printf("\n 5. Go Home");
 
 		printf("\n Enter Selection: ");
-		scanf("%i", &mSelection); FLUSH;
+		scanf_s("%i", &mSelection); FLUSH;
 
 		switch (mSelection) { // Begin switch
 
@@ -52,6 +62,8 @@ void mainMenu() {
 			break;
 		} // End switch
 
+		PAUSE;
+
 	} while (mSelection != 5);
 
 }	//	End Menu Function
@@ -59,6 +71,8 @@ void mainMenu() {
 
 		void currentMoney(double morseMoney[])	{
 
-
+			printf("---------------------------------------------------------------------\n\n");
+			printf("\tMoney In Wallet: %.2lf\tMoney In Bank: %.2lf", morseMoney[0], morseMoney[1]);
+			printf("\n\n---------------------------------------------------------------------\n\n");
 
 		}
