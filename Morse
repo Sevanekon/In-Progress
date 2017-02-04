@@ -16,13 +16,15 @@
 //	Prototype Functions Here
 int awayTheyGo(int x);
 void bankMenu(double morseMoney[]);
+double betHorse(int pick, double betAmount);
+double bettingWindow(double morseMoney[]);
 void currentMoney(double morseMoney[]);
 void delay(unsigned int mseconds);
 void horsesWon(int winners[], int numOfWinners);
 void mainMenu();
-void raceTime(double morseMoney[], int winningHorses[], int raceCounter);
-void raceUpdate(int advancementValue, char theRace[][25], int horseRunningNumbers[], int whosTheWinner);
-int winnerCheck(char theRace[][25]);
+void raceTime(double morseMoney[], int winningHorses[], int raceCounter, int pick, double betAmount);
+void raceUpdate(int advancementValue, char theRace[][26], int horseRunningNumbers[], int whosTheWinner);
+int winnerCheck(char theRace[][26]);
 char winnersLetter(int whosTheWinner);
 //	End Prototype Functions
 
@@ -31,7 +33,7 @@ void main() {
 	mainMenu();
 }
 
-	int awayTheyGo(int x) {
+	int awayTheyGo(int x) {	//	Function that actually determines the winner of the Race
 
 	if (x >= 1 && x <= 30) {	//	30% Horse 1
 		return 1;
@@ -63,7 +65,7 @@ void main() {
 
 }
 
-	void bankMenu(double morseMoney[]) {
+	void bankMenu(double morseMoney[]) {	//	Function for visits to the bank
 
 		int bSelection = 0;
 		double moneyAmount = 0;
@@ -72,7 +74,7 @@ void main() {
 
 			CLS;
 
-			currentMoney(morseMoney);
+			currentMoney(morseMoney);	//	Wallet and Bank Balance Banner
 
 			printf("What would you like to do? \n");
 			printf("\n 1. Make a withdrawal");
@@ -86,7 +88,6 @@ void main() {
 			switch (bSelection) { // Begin switch
 
 			case 1:
-
 				printf("How much would you like to withdraw?\nAmount: ");
 				scanf_s("%lf", &moneyAmount);
 
@@ -102,7 +103,6 @@ void main() {
 				break;
 
 			case 2:
-
 				printf("How much would you like to deposit?\nAmount: ");
 				scanf_s("%lf", &moneyAmount);
 
@@ -118,8 +118,7 @@ void main() {
 				break;
 
 			case 3:
-
-				printf("Look at the top of the screen, Dummy.\n\n");
+				printf("Look at the top of the screen, Dummy.\n\n");	//	Balance inquiry not needed since we're in the digital age and you have phone notifications. Duh.
 				break;
 
 			case 4:
@@ -132,8 +131,63 @@ void main() {
 				break;
 			} // End switch
 
-		} while (bSelection != 3);
+		} while (bSelection != 4);
 
+	}
+
+	double betHorse(int pick, double betAmount) {	//	Function that determines the individual payouts of the horses if they are to win.
+
+		switch (pick) {
+		case 1:
+			betAmount *= 2;
+			break;
+		case 2:
+			betAmount *= 5;
+			break;
+		case 3:
+			betAmount *= 10;
+			break;
+		case 4:
+			betAmount *= 15;
+			break;
+		case 5:
+			betAmount *= 50;
+			break;
+		case 6:
+			betAmount *= 20;
+			break;
+		case 7:
+			betAmount *= 10;
+			break;
+		case 8:
+			betAmount *= 5;
+			break;
+		case 9:
+			betAmount *= 3;
+			break;
+		default:
+			break;
+		}
+
+		return betAmount;	//	returns the total winnings
+	}
+
+	double bettingWindow(double morseMoney[]) {	//	Function that allows the bets to be placed on the horses and informs of their odds
+		double betAmount = 0;
+		printf("Welcome to the track window.\n");
+		printf("Pick the winning horse : \n1. American Pharaoh (2 - 1 Odds)\n2. Seabiscuit (5 - 1 Odds)\n3. Black Stalion (10 - 1 Odds)\n4. Dirty Hilary (15 - 1 Odds)\n");
+		printf("5. Hundchuck (50 - 1 Odds)\n6. Trigger (20 - 1 Odds)\n7. Epona (10 - 1 Odds)\n8. Roach (5 - 1 Odds)\n9. Buckwheat Grotes (3 - 1 Odds)\n\n\n");
+		printf("How much would you like to bet: ");
+		scanf_s("%lf", &betAmount);
+
+		if (morseMoney[0] < betAmount) {	//	Error Check for Insufficient funds
+			printf("Sorry, you don't have enough money in your wallet.\n");
+			return 0;
+		}
+		else {
+			morseMoney[0] -= betAmount;	//	If the bet goes through, deduction from wallet
+		}
+		return betAmount;	//	returns bet amount to be manipulated in other functions
 	}
 
 	void currentMoney(double morseMoney[]) {	//	Banner across top to show current money
@@ -144,12 +198,12 @@ void main() {
 
 	}
 
-	void delay(unsigned int mseconds) {
+	void delay(unsigned int mseconds) {	//	Function that allows the delay of program executions, without this the horse race ends too quickly and it's annoying to watch.
 		clock_t goal = mseconds + clock();
 		while (goal > clock());
 	}
 
-	void horsesWon(int winners[], int numOfWinners) {
+	void horsesWon(int winners[], int numOfWinners) {	//	Function that displays the winners of previous races
 		CLS;
 		printf("\nHere are the list of winners\n");
 
@@ -164,7 +218,9 @@ void main() {
 
 		int mSelection = 0;	//	Menu choice
 		double morseMoney[2] = { 0 , 300 };	//	Element 0 is Wallet, Element 1 is Bank
-		int *winningHorses[1000] = { 0 }, winnerCount = 0;
+		int *winningHorses[1000] = { 0 }, winnerCount = 0, pick;	//	Stores the horses that win, is a race counter, is the horse betted on
+		double betAmount = 0;
+		int errorCheck;	//	Just a true false switch
 
 		do {	// Begin Menu Loop
 
@@ -191,21 +247,45 @@ void main() {
 				break;
 
 			case 2:
-			
+
+				if (betAmount != 0) {	//	Prevents multiple bets since you can only bet on one winner
+					printf("\nYou Already Have a Standing Bet! Go to the Track.\n\n");
+					break;
+				}
+				CLS;
+				pick = 10;	//	Defaults to out of limits to indicate if no bet was placed
+				currentMoney(morseMoney);	//	Banner
+				betAmount = bettingWindow(morseMoney);	//	Sets bet amount
+				if (betAmount == 0) {	//	error check for if bet isn't placed
+					pick = 10;
+					break;
+				}
+				errorCheck = 0;	//	Error check initialization for not picking a horse
+				do {
+					printf("Which horse would you like to bet on: ");
+					scanf_s("%i", &pick);
+					if (pick < 1 || pick > 9) {
+						printf("\nPlease Select a Valid Option.\n");
+					}
+					else {
+						errorCheck = 1;	//	allows loop exit
+					}
+				} while (errorCheck == 0);
 				break;
 
 			case 3:
-				winnerCount++;
-				raceTime(morseMoney, winningHorses, winnerCount);
+				winnerCount++;	//	keeps track of number of winners (or times race executed)
+				raceTime(morseMoney, winningHorses, winnerCount, pick, betAmount);	//	The actual race
+				betAmount = 0;	//	resets bet
 				break;
 
 			case 4:
-				if (winnerCount == 0) {
+				if (winnerCount == 0) {		//	Just an error check
 					printf("There have been no races yet today.\n");
 					break;
 				}
 				else {
-					horsesWon(winningHorses, winnerCount);
+					horsesWon(winningHorses, winnerCount);	//	displays winners
 					break;
 				}
 
@@ -224,13 +304,13 @@ void main() {
 
 	}	//	End Menu Function
 
-	void raceTime(double morseMoney[], int winningHorses[], int raceCounter) {
+	void raceTime(double morseMoney[], int winningHorses[], int raceCounter, int pick, double betAmount) {
 
 		int didSomeoneWin = 0, advancement = 0;
 		int horseRunningNumbers[9] = { 0 } ;
 		int x, whosTheWinner;
 
-		char theRace[9][25] = { ' ' } ;
+		char theRace[9][26] = { ' ' } ;
 		theRace[0][0] = 'A';	//	American Pharoah # 1
 		theRace[1][0] = 'S';	//	Seabiscuit # 2
 		theRace[2][0] = 'B';	//	Black Stalion # 3
@@ -241,34 +321,51 @@ void main() {
 		theRace[7][0] = 'R';	//	Roach # 8
 		theRace[8][0] = 'b';	//	Buckwheat Grotes # 9
 
+		for (int i = 0; i < 9; i++) {	//	Shows a finish line
+			theRace[i][25] = '|';
+		}
+
+
 		x = rand() % 100 + 1;
-		whosTheWinner = awayTheyGo(x);
+		whosTheWinner = awayTheyGo(x);	//	Generates a random winner within the fixed odds percentage 
 
 		do {
 			CLS;
-			currentMoney(morseMoney);
+			currentMoney(morseMoney);	//	Banner
 
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 25; j++) {
+			for (int i = 0; i < 9; i++) {		//	Displays the "track" two dimensional Array
+				for (int j = 0; j < 26; j++) {
 					printf("%c ", theRace[i][j]);
 					FLUSH;
 				}
 				printf("\n");
 			}
 
-			x = rand() % 9 + 1;
+			x = rand() % 9 + 1;	//	Just random advancement to make it look like a race
 			advancement = x;
-			delay(100);
-			raceUpdate(advancement, theRace, &horseRunningNumbers, whosTheWinner);
+			delay(100);	//	Delays for readability
+			raceUpdate(advancement, theRace, &horseRunningNumbers, whosTheWinner);	//	Actual action of altering the 2d array
 
-			didSomeoneWin = winnerCheck(theRace);
-			winningHorses[raceCounter - 1] = whosTheWinner;
+			didSomeoneWin = winnerCheck(theRace);	//	Determines if the array has displayed someone winning
+			winningHorses[raceCounter - 1] = whosTheWinner;	//	records the winner of the race
 
 		} while (didSomeoneWin != 1);
 
+		if (pick == whosTheWinner) {	//	Payout for winner
+			morseMoney[0] += betHorse(pick, betAmount);
+			printf("\nYou won!\n");
+			printf("You now have %.2lf in your wallet\n\n", morseMoney[0]);
+		}
+		else if (pick <= 9) {	//	Message for Loser
+			printf("\nSorry, you lost this time.\n");
+		}
+		else if (pick > 9) {	//	No bet placed
+			printf("\nYou had no bets placed.\n");
+		}
+
 	}
 
-	void raceUpdate(int advancementValue, char theRace[][25], int horseArray[], int whosTheWinner) {
+	void raceUpdate(int advancementValue, char theRace[][26], int horseArray[], int whosTheWinner) {
 		
 		if (theRace[0][22] == 'A' || theRace[1][22] == 'S' || theRace[2][22] == 'B' || theRace[3][22] == 'D' || theRace[4][22] == 'H' || theRace[5][22] == 'T' ||
 			theRace[6][22] == 'E' || theRace[7][22] == 'R' || theRace[8][22] == 'b') {
@@ -325,7 +422,7 @@ void main() {
 		}
 	}
 
-	int winnerCheck(char theRace[][25]) {
+	int winnerCheck(char theRace[][26]) {
 
 		if (theRace[0][24] == 'A') {
 			return 1;
